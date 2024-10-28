@@ -52,8 +52,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findItemsByQuery(Integer ownerId, String text) {
-        return items.values().stream().
-                peek(item -> {
+        return items.values().stream().peek(item -> {
                     item.setName(item.getName().toLowerCase());
                     item.setDescription(item.getDescription().toLowerCase());
                 }).filter(item -> item.getOwner().equals(ownerId))
