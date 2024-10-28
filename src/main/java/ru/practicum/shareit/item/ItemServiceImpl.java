@@ -71,8 +71,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getAllItemsByOwner(Integer ownerId) {
-        return itemRepository.findAllItemsByOwner(ownerId).stream().
-                map(ItemMapperDto::toItemDto).toList();
+        return itemRepository.findAllItemsByOwner(ownerId).stream().map(ItemMapperDto::toItemDto).toList();
     }
 
     @Override
@@ -81,9 +80,7 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         List<Item> allItems = itemRepository.findItemsByQuery(ownerId, text);
-        return allItems.stream().
-                filter(Item::getAvailable).
-                map(ItemMapperDto::toItemDto).toList();
+        return allItems.stream().filter(Item::getAvailable).map(ItemMapperDto::toItemDto).toList();
     }
 
 

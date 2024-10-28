@@ -46,8 +46,8 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findAllItemsByOwner(Integer ownerId) {
-        return items.values().stream().
-                filter(item -> item.getOwner().equals(ownerId)).toList();
+        return items.values().stream()
+                .filter(item -> item.getOwner().equals(ownerId)).toList();
     }
 
     @Override
@@ -56,16 +56,14 @@ public class ItemRepositoryImpl implements ItemRepository {
                 peek(item -> {
                     item.setName(item.getName().toLowerCase());
                     item.setDescription(item.getDescription().toLowerCase());
-                }).
-                filter(item -> item.getOwner().equals(ownerId)).
-                filter(item -> item.getName().contains(text.toLowerCase()) ||
-                        item.getDescription().contains(text.toLowerCase())).
-                toList();
+                }).filter(item -> item.getOwner().equals(ownerId))
+                .filter(item -> item.getName().contains(text.toLowerCase()) ||
+                        item.getDescription().contains(text.toLowerCase())).toList();
     }
 
     private Integer generateId() {
-        Integer id = items.values().stream().
-                mapToInt(Item::getId).max().orElse(0);
+        Integer id = items.values().stream()
+                .mapToInt(Item::getId).max().orElse(0);
         return ++id;
     }
 }
