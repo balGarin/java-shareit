@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(value = "ru.practicum.shareit")
 public class ErrorHandler {
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFoundHandle(NotFoundException notFoundException) {
@@ -30,12 +29,10 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleOtherExceptions(Throwable e) {
         return new ErrorResponse(e.getMessage());
-
     }
 
     @ExceptionHandler

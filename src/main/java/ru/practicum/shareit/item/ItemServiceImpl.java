@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapperDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -18,11 +18,13 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final ItemMapper itemMapper;
 
     @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository, ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
+        this.itemMapper = itemMapper;
     }
 
     @Override
@@ -31,20 +33,19 @@ public class ItemServiceImpl implements ItemService {
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
             if (item.getOwner().equals(ownerId)) {
-                return ItemMapperDto.toItemDto(item);
+                return itemMapper.toItemDto(item);
             } else {
                 throw new IncorrectDataException("Не верный владелец вещи");
             }
         } else {
             throw new NotFoundException("Вещ с таким ID не найдена");
         }
-
     }
 
     @Override
     public ItemDto addItem(Integer ownerId, Item item) {
         if (checkExistedUser(ownerId)) {
-            return ItemMapperDto.toItemDto(itemRepository.saveItem(ownerId, item));
+            return itemMapper.toItemDto(itemRepository.saveItem(ownerId, item));
         } else {
             throw new NotFoundException("Пользователь с таким ID не найден");
         }
@@ -57,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
             if (optionalItem.isPresent()) {
                 Item outdated = optionalItem.get();
                 if (outdated.getOwner().equals(ownerId)) {
-                    return ItemMapperDto.toItemDto(itemRepository.updateItem(itemId, item));
+                    return itemMapper.toItemDto(itemRepository.updateItem(itemId, item));
                 } else {
                     throw new IncorrectDataException("Не верный владелец вещи");
                 }
@@ -71,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getAllItemsByOwner(Integer ownerId) {
-        return itemRepository.findAllItemsByOwner(ownerId).stream().map(ItemMapperDto::toItemDto).toList();
+        return itemRepository.findAllItemsByOwner(ownerId).stream().map(itemMapper::toItemDto).toList();
     }
 
     @Override
@@ -80,9 +81,8 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         List<Item> allItems = itemRepository.findItemsByQuery(ownerId, text);
-        return allItems.stream().filter(Item::getAvailable).map(ItemMapperDto::toItemDto).toList();
+        return allItems.stream().filter(Item::getAvailable).map(itemMapper::toItemDto).toList();
     }
-
 
     private boolean checkExistedUser(Integer ownerId) {
         return userRepository.findUserById(ownerId).isPresent();

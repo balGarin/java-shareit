@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-
     private final ItemService itemService;
 
     @Autowired
@@ -48,5 +47,4 @@ public class ItemController {
                                        @RequestParam("text") String text) {
         return itemService.searchByQuery(ownerId, text);
     }
-
 }

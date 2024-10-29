@@ -13,13 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
-    @Autowired
+
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
 
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable Integer id) {

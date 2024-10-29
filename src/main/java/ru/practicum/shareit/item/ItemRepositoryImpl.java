@@ -12,7 +12,6 @@ import java.util.Optional;
 @Repository
 @Slf4j
 public class ItemRepositoryImpl implements ItemRepository {
-
     private Map<Integer, Item> items = new HashMap<>();
 
     @Override
@@ -36,7 +35,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         log.info("Вещ - {} обновлена на - \n{}", outdated, updatedItem);
         items.put(itemId, updatedItem);
         return items.get(itemId);
-
     }
 
     @Override
