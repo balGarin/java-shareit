@@ -14,6 +14,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -89,6 +90,6 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDtoReturn> getAllBookingsByUser(Integer ownerId) {
         return bookingRepository.findAllByBookerId(ownerId).stream()
                 .map(bookingMapper::toBookingDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 }

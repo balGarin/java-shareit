@@ -18,6 +18,7 @@ import ru.practicum.shareit.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -96,16 +97,16 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllItemsByOwner(Integer ownerId) {
         return itemRepository.findAllByOwnerId(ownerId).stream()
-                .map(itemMapper::toItemDto).toList();
+                .map(itemMapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override
     public List<ItemDto> searchByQuery(Integer ownerId, String text) {
-        if (text.isEmpty() || text.isBlank()) {
+        if (text.isEmpty()) {
             return new ArrayList<>();
         }
         List<Item> allItems = itemRepository.findItemsByQuery(text);
-        return allItems.stream().map(itemMapper::toItemDto).toList();
+        return allItems.stream().map(itemMapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override
