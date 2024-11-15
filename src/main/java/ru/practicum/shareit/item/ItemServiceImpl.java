@@ -95,9 +95,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getAllItemsByOwner(Integer ownerId) {
-        return itemRepository.findAllByOwnerId(ownerId).stream()
-                .map(itemMapper::toItemDto).collect(Collectors.toList());
+    public List<ItemDtoWithCommentsAndBookings> getAllItemsByOwner(Integer ownerId) {
+        List<Item>items = itemRepository.findAllByOwnerId(ownerId);
+        return items.stream()
+        .map(item ->
+             getItemById(ownerId, item.getId())
+        ).collect(Collectors.toList());
     }
 
     @Override

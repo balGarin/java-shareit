@@ -12,7 +12,7 @@ import java.time.Instant;
  * TODO Sprint add-item-requests.
  */
 @Data
-//@Entity
+@Entity
 @Table(name = "requests")
 @AllArgsConstructor
 public class ItemRequest {

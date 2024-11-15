@@ -9,7 +9,7 @@ import java.time.Instant;
 public class CommentDto {
     private Integer id;
     private String text;
-    private Item item;
+    private ItemDto item;
     private String authorName;
     private Instant created;
 }
