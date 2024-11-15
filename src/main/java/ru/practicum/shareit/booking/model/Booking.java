@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.booking.Status;
@@ -10,6 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * TODO Sprint add-bookings.
@@ -40,5 +40,17 @@ public class Booking {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        if (id == null || booking.id == null) return false;
+        return id.equals(booking.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -21,7 +20,7 @@ public interface BookingMapper {
     Booking toBooking(BookingDto dto, User user, Item item);
 
 
-    List<BookingDtoReturn> toBookingDto(List<Booking>bookings);
+    List<BookingDtoReturn> toBookingDto(List<Booking> bookings);
 
 
 }

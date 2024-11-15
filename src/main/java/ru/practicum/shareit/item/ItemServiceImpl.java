@@ -96,11 +96,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDtoWithCommentsAndBookings> getAllItemsByOwner(Integer ownerId) {
-        List<Item>items = itemRepository.findAllByOwnerId(ownerId);
+        List<Item> items = itemRepository.findAllByOwnerId(ownerId);
         return items.stream()
-        .map(item ->
-             getItemById(ownerId, item.getId())
-        ).collect(Collectors.toList());
+                .map(item ->
+                        getItemById(ownerId, item.getId())
+                ).collect(Collectors.toList());
     }
 
     @Override

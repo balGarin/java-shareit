@@ -3,16 +3,18 @@ package ru.practicum.shareit.item.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.User;
 
+import java.util.Objects;
+
 /**
  * TODO Sprint add-controllers.
  */
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "items")
 public class Item {
@@ -33,8 +35,19 @@ public class Item {
     @Transient
     private ItemRequest request;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        if (id == null || item.id == null) return false;
+        return id.equals(item.id);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
 
 

@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -92,7 +91,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDtoReturn> getAllBookingsByUser(Integer ownerId, String state) {
-        State stateEnum = null;
+        State stateEnum;
 
         try {
             stateEnum = State.valueOf(state);
