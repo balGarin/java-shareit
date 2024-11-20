@@ -8,6 +8,7 @@ import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,22 +23,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(User user) {
-        return userMapper.toUserDto(userRepository.saveUser(user));
+        return userMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
     public UserDto updateUser(User user, Integer id) {
-        return userMapper.toUserDto(userRepository.updateUser(user, id));
+
+        User outdatedUser = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден"));
+        if (user.getName() != null) {
+            outdatedUser.setName(user.getName());
+        }
+        if (user.getEmail() != null) {
+            outdatedUser.setEmail(user.getEmail());
+        }
+        return userMapper.toUserDto(userRepository.save(outdatedUser));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        return userRepository.findAllUsers().stream().map(userMapper::toUserDto).toList();
+        return userRepository.findAll().stream().map(userMapper::toUserDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDto getUserById(Integer id) {
-        Optional<User> user = userRepository.findUserById(id);
+        Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return userMapper.toUserDto(user.get());
         } else {
@@ -47,6 +57,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer id) {
-        userRepository.deleteUser(id);
+        userRepository.deleteById(id);
     }
 }

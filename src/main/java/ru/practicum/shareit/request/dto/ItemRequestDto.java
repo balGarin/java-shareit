@@ -10,4 +10,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class ItemRequestDto {
     private Integer id;
+    private String description;
 }
