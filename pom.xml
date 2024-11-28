@@ -21,7 +21,7 @@
     </properties>
 
     <modules>
-        <module>geteway</module>
+        <module>gateway</module>
         <module>server</module>
     </modules>
 
