@@ -7,4 +7,6 @@ import ru.practicum.shareit.user.User;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
     UserDto toUserDto(User user);
+
+    User toUser(UserDto userDto);
 }

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.dto.BookingDtoReturn;
-import ru.practicum.shareit.booking.BookingMapper;
+import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -34,7 +34,8 @@ public class ItemServiceImpl implements ItemService {
     private final BookingMapper bookingMapper;
 
     private final ItemRequestRepository itemRequestRepository;
-@Autowired
+
+    @Autowired
     public ItemServiceImpl(ItemRepository itemRepository,
                            UserRepository userRepository,
                            ItemMapper itemMapper,
@@ -52,8 +53,6 @@ public class ItemServiceImpl implements ItemService {
         this.bookingMapper = bookingMapper;
         this.itemRequestRepository = itemRequestRepository;
     }
-
-
 
     @Override
     public ItemDtoWithCommentsAndBookings getItemById(Integer ownerId, Integer itemId) {
@@ -89,22 +88,20 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-
-
     @Override
-    public ItemDto updateItem(Integer ownerId, Integer itemId, Item item) {
+    public ItemDto updateItem(Integer ownerId, Integer itemId, ItemDto itemDto) {
         if (userRepository.existsById(ownerId)) {
             Item outdatedItem = itemRepository.findById(itemId)
                     .orElseThrow(() -> new NotFoundException("Вещь с таким id не найдена"));
             if (outdatedItem.getOwner().getId().equals(ownerId)) {
-                if (item.getAvailable() != null) {
-                    outdatedItem.setAvailable(item.getAvailable());
+                if (itemDto.getAvailable() != null) {
+                    outdatedItem.setAvailable(itemDto.getAvailable());
                 }
-                if (item.getName() != null) {
-                    outdatedItem.setName(item.getName());
+                if (itemDto.getName() != null) {
+                    outdatedItem.setName(itemDto.getName());
                 }
-                if (item.getDescription() != null) {
-                    outdatedItem.setDescription(item.getDescription());
+                if (itemDto.getDescription() != null) {
+                    outdatedItem.setDescription(itemDto.getDescription());
                 }
                 return itemMapper.toItemDto(itemRepository.save(outdatedItem));
             } else {
@@ -134,13 +131,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto addComment(Integer ownerId, Integer itemId, Comment comment) {
+    public CommentDto addComment(Integer ownerId, Integer itemId, CommentDto commentDto) {
         User user = userRepository.findById(ownerId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
-        comment.setItem(item);
-        comment.setAuthor(user);
+        Comment comment = commentMapper.toComment(commentDto, user, item);
         Booking booking = bookingRepository.findByItemIdAndStatusAndBookerId(itemId, Status.APPROVED, ownerId);
         if (booking.getEnd().isBefore(LocalDateTime.now())) {
             return commentMapper.toCommentDto(commentRepository.save(comment));
@@ -149,4 +145,5 @@ public class ItemServiceImpl implements ItemService {
             throw new IncorrectDataException("Вы не можете оставить комментарий на эту вещь ");
         }
     }
+
 }

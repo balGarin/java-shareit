@@ -3,13 +3,7 @@ package ru.practicum.shareit.booking;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -52,4 +46,22 @@ public class BookingController {
         log.info("Get booking {}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
     }
+
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<Object> changeStatus(@RequestHeader("X-Sharer-User-Id") Integer ownerId,
+                                               @PathVariable Integer bookingId, @RequestParam Boolean approved) {
+        log.info("Approved booking {}, bookingId {}", approved, bookingId);
+        return bookingClient.changeStatus(bookingId, ownerId, approved);
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<Object> getAllBookingByCurrentUser(
+            @RequestHeader("X-Sharer-User-Id") long userId,
+            @RequestParam(name = "state", defaultValue = "all") String stateParam) {
+        BookingState state = BookingState.from(stateParam)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
+        return bookingClient.getAllBookingByCurrentUser(userId, state);
+    }
+
+
 }

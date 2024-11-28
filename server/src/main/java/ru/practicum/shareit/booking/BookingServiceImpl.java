@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoReturn;
+import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -122,5 +123,49 @@ public class BookingServiceImpl implements BookingService {
         }
         return bookingMapper.toBookingDto(bookingRepository.findAllByBookerId(ownerId)).stream()
                 .sorted(Comparator.comparing(BookingDtoReturn::getEnd).reversed()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookingDtoReturn> getAllBookingByCurrentUser(Integer userId, String stateParam) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        State state = State.valueOf(stateParam);
+        List<Item> items = itemRepository.findAllByOwnerId(userId);
+        if (items.size() < 1) {
+            throw new IncorrectDataException("У текущего пользователя нет выложенных вещей");
+        }
+        List<Integer> ids = items.stream()
+                .map(Item::getId).collect(Collectors.toList());
+        List<Booking> bookings = bookingRepository.findAllByItemIdIn(ids);
+        switch (state) {
+            case PAST:
+                return bookingMapper.toBookingDto(bookings.stream()
+                        .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now()))
+                        .sorted(Comparator.comparing(Booking::getEnd).reversed())
+                        .collect(Collectors.toList()));
+            case FUTURE:
+                return bookingMapper.toBookingDto(bookings.stream()
+                        .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                        .sorted(Comparator.comparing(Booking::getEnd).reversed())
+                        .collect(Collectors.toList()));
+            case CURRENT:
+                return bookingMapper.toBookingDto(bookings.stream()
+                        .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
+                        .filter(booking -> booking.getEnd().isAfter(LocalDateTime.now()))
+                        .sorted(Comparator.comparing(Booking::getEnd).reversed())
+                        .collect(Collectors.toList()));
+            case WAITING:
+                return bookingMapper.toBookingDto(bookings.stream()
+                        .filter(booking -> booking.getStatus().toString().equals(State.WAITING.toString()))
+                        .sorted(Comparator.comparing(Booking::getEnd).reversed())
+                        .collect(Collectors.toList()));
+            case REJECTED:
+                return bookingMapper.toBookingDto(bookings.stream()
+                        .filter(booking -> booking.getStatus().toString().equals(State.REJECTED.toString()))
+                        .sorted(Comparator.comparing(Booking::getEnd).reversed())
+                        .collect(Collectors.toList()));
+        }
+        return bookingMapper.toBookingDto(bookings.stream()
+                .sorted(Comparator.comparing(Booking::getEnd)).collect(Collectors.toList()));
     }
 }

@@ -5,8 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithCommentsAndBookings;
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
+
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Integer ownerId, @PathVariable Integer itemId,
-                              @RequestBody Item item) {
+                              @RequestBody ItemDto item) {
         return itemService.updateItem(ownerId, itemId, item);
     }
 
@@ -53,7 +52,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Integer ownerId,
                                  @PathVariable Integer itemId,
-                                 @RequestBody Comment comment) {
+                                 @RequestBody CommentDto comment) {
         return itemService.addComment(ownerId, itemId, comment);
     }
 }

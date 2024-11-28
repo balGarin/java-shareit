@@ -22,20 +22,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto addUser(User user) {
+    public UserDto addUser(UserDto userDto) {
+        User user = userMapper.toUser(userDto);
         return userMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto updateUser(User user, Integer id) {
+    public UserDto updateUser(UserDto userDto, Integer id) {
 
         User outdatedUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден"));
-        if (user.getName() != null) {
-            outdatedUser.setName(user.getName());
+        if (userDto.getName() != null) {
+            outdatedUser.setName(userDto.getName());
         }
-        if (user.getEmail() != null) {
-            outdatedUser.setEmail(user.getEmail());
+        if (userDto.getEmail() != null) {
+            outdatedUser.setEmail(userDto.getEmail());
         }
         return userMapper.toUserDto(userRepository.save(outdatedUser));
     }

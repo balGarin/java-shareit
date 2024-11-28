@@ -8,7 +8,7 @@ import java.time.Instant;
 public class CommentDto {
     private Integer id;
     private String text;
-    private ItemDto item;
+    private Instant created = Instant.now();
     private String authorName;
-    private Instant created;
+
 }

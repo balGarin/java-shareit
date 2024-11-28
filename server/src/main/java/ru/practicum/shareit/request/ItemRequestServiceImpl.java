@@ -16,7 +16,6 @@ import ru.practicum.shareit.user.UserRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,22 +63,21 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             }
             itemRequestResponseDtos.add(requestMapper.toItemRequestResponseDto(itemRequest, itemListForRequest));
         }
-
         itemRequestResponseDtos.sort(Comparator.comparing(ItemRequestResponseDto::getCreated).reversed());
         return itemRequestResponseDtos;
     }
 
     @Override
     public List<ItemRequestDto> getAllRequests(Integer userId) {
-        return  requestMapper.toItemRequestDto(itemRequestRepository.findAllByRequesterIdNot(userId));
+        return requestMapper.toItemRequestDto(itemRequestRepository.findAllByRequesterIdNot(userId));
 
     }
 
     @Override
     public ItemRequestResponseDto getRequest(Integer requestId) {
-        ItemRequest itemRequest=itemRequestRepository.findById(requestId)
-                .orElseThrow(()->new NotFoundException("Нет такого запроса"));
-        List<Item>items = itemRepository.findAllByRequestId(requestId);
-        return requestMapper.toItemRequestResponseDto(itemRequest,items);
+        ItemRequest itemRequest = itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException("Нет такого запроса"));
+        List<Item> items = itemRepository.findAllByRequestId(requestId);
+        return requestMapper.toItemRequestResponseDto(itemRequest, items);
     }
 }

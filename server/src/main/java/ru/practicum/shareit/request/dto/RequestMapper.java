@@ -10,17 +10,18 @@ import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,uses = UserMapper.class)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = UserMapper.class)
 public interface RequestMapper {
 
     ItemRequestDto toItemRequestDto(ItemRequest request);
 
-    @Mapping(target = "requester",source = "user")
-    @Mapping(target = "id",source = "itemRequestDto.id")
+    @Mapping(target = "requester", source = "user")
+    @Mapping(target = "id", source = "itemRequestDto.id")
     ItemRequest toItemRequest(ItemRequestDto itemRequestDto, User user);
-    @Mapping(target = "id",source = "itemRequest.id")
-    @Mapping(target = "description",source = "itemRequest.description")
-    ItemRequestResponseDto toItemRequestResponseDto(ItemRequest itemRequest, List<Item>items);
 
-    List<ItemRequestDto>toItemRequestDto(List<ItemRequest>list);
+    @Mapping(target = "id", source = "itemRequest.id")
+    @Mapping(target = "description", source = "itemRequest.description")
+    ItemRequestResponseDto toItemRequestResponseDto(ItemRequest itemRequest, List<Item> items);
+
+    List<ItemRequestDto> toItemRequestDto(List<ItemRequest> list);
 }
