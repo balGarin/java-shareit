@@ -17,5 +17,5 @@
 
 ## Стек:
 ⚙
-Java, Spring, Spring Boot, Spring MVC, Spring Data, Hibernate, Maven, Mapstruct, PostgreSQL, 
-Junit 5, Mockito
+**Java, Spring, Spring Boot, Spring MVC, Spring Data, Hibernate, Maven, Mapstruct, PostgreSQL, 
+Junit 5, Mockito**
