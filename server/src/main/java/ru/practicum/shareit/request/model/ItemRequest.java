@@ -24,7 +24,7 @@ public class ItemRequest {
     private Integer id;
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "requestor_id")
+    @JoinColumn(name = "requester_id")
     private User requester;
     private Instant created = Instant.now();
 
